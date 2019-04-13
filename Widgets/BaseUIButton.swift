@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import CleanUtils
 
 @IBDesignable
 open class BaseUIButton: UIButton {
@@ -130,5 +131,17 @@ public extension Reactive where Base: BaseUIButton {
         return Binder(self.base) { element, value in
             element.loading(value)
         }
+    }
+}
+
+public extension ObservableType where E: State {
+    func bindLoading(to button: BaseUIButton) -> Disposable {
+        return map { $0.isLoading }.bind(to: button.rx.isLoading)
+    }
+}
+
+public extension BehaviorRelay where Element == ActionState {
+    func bindLoading(to button: BaseUIButton) -> Disposable {
+        return map { $0.loading }.bind(to: button.rx.isLoading)
     }
 }
